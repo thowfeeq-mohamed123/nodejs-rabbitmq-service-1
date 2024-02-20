@@ -7,7 +7,6 @@ app.use(express.json());
 const amqp = require("amqplib");
 var channel, connection;
 
-connectQueue(); // call connectQueue function
 async function connectQueue() {
   try {
     connection = await amqp.connect("amqp://localhost:5672");
@@ -21,6 +20,9 @@ async function connectQueue() {
 }
 
 const sendData = async (data) => {
+
+  // connect rabbitmq
+  await connectQueue();
   // send data to queue
   await channel.sendToQueue("test-queue", Buffer.from(JSON.stringify(data)));
 
